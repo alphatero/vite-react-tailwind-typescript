@@ -10,11 +10,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "build-css": "tailwind build scr/css/tailwind.css -o src/css/app.css"
   },
   "dependencies": {
+    "autoprefixer": "^10.3.1",
     "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react-dom": "^17.0.0",
+    "tailwindcss": "^2.2.7"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
