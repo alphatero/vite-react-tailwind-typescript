@@ -2,6 +2,67 @@ import React, { useState } from 'react'
 import './App.css'
 import './css/app.css'
 
+
+function clsx(...str: string[] ) {
+  return str.filter(Boolean).join(" ");
+}
+
+type Props = {
+  children: any;
+  className: string;
+}
+
+type Text = {
+  id: string;
+  label: string;
+}
+
+function Card({ children, className }: Props) {
+  return (
+    <div 
+      className={clsx("rounded-lg w-full shadow-sp p-4", className)}    
+    >
+      { children }
+    </div>
+  ); 
+}
+
+function Button({ children, className }: Props) {
+  return (
+    <button 
+      className={clsx(
+        "rounded-lg w-full shadow-sp p-4 bg-green", className)}    
+    >
+      { children }
+    </button>
+  );
+}
+
+function TextField({ id, label }: Text) {
+  const [value, setValue] = useState('');
+  return (
+    <div className="relative flex items-center">
+
+      {
+        value === '' && (
+          <label 
+            htmlFor={id} 
+            className={clsx("absolute px-3", value !== "" ? "opacity-0":"")}>
+            { label }
+          </label>
+        )}
+
+      <input
+        type="text" 
+        name={id} 
+        id={id} 
+        className="border border-gray focus:border-purple
+        w-full p-3 rounded"
+        onChange={(event) => setValue(event.target.value)}/>
+    </div>
+  )
+}
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -17,76 +78,31 @@ function App() {
             Watching scripted tutorials is great, 
             but understanding how developers think is invaluable. </p>
         </div>
-        <div className="md:flex-1 max-w-screen-sm md:px-11 px-0 flex
-        flex-col">
-          <button 
-          className="btn  
-          text-white text-base bg-purple rounded-lg
-          shadow-sp py-5 px-5 my-6
-          w-full 
-          "
-          ><span className="font-bold">Try it free 7 days </span> 
-          then $20/mo. thereafter</button>
-
-          <form action="" 
-          className="rounded-lg bg-white
-          shadow-sp w-full p-6">
-            <input type="text" 
-            id="firstName" placeholder="First Name"
-            className="border-gray border-solid border text-black 
-            py-3 focus:border-purple px-8 mb-5 w-full"/>
-            <input type="text" 
-            id="lastName" placeholder="Last Name"
-            className="border-gray border-solid border text-black 
-            py-3 focus:border-purple px-8 mb-5 w-full"/>
-            <input type="mail" 
-            id="eMail" placeholder="Email Address"
-            className="border-gray border-solid border text-black 
-            py-3 focus:border-purple px-8 mb-5 w-full"/>
-            <input type="password" 
-            id="password" placeholder="Password"
-            className="border-gray border-solid border text-black 
-            py-3 focus:border-purple px-8 mb-5 w-full"/>
-
-            <button className="btn bg-green rounded-lg
-          shadow-green w-full
-          text-lg py-4 mb-2">CLAIM YOUR FREE TRIAL</button>
-          <p className="text-gray text-xs">By clicking the button, you are agreeing to our 
-          <span className="text-primary"> Terms and Services</span></p>
-          </form>
-        </div>
+        <section className="grid gap-6">
+          <Card className="bg-purple">
+            <p className="px-4"><b>Try it free 7 days </b> 
+            then $20/mo. thereafter</p>
+          </Card>
+          <Card className="bg-white text-black">
+            <form className="space-y-4">
+              <TextField id="first-name" label="First Name"/>
+              <TextField id="last-name" label="Last Name"/>
+              <TextField id="email" label="Email"/>
+              <TextField id="password" label="Password"/>
+              <Button className="text-white shadow-green">CLAIM YOUR FREE TRIAL</Button>
+              <div>
+                <p className="text-gray text-xs px-4">
+                By clicking the button, you are agreeing to our{" "}
+                <a href="#" className="text-primary font-bold">
+                  Terms and Services
+                </a>
+                </p>
+              </div>
+            </form>
+          </Card>
+          
+        </section>
       </div>
-
-      {/* <header className="App-header">
-        <p>Learn to code by watching others</p>
-        <p>
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header> */}
     </div>
   )
 }
