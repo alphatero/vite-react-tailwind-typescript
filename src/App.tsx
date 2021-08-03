@@ -15,7 +15,7 @@ type Props = {
 type Text = {
   id: string;
   label: string;
-  error: any;
+  error: string | boolean;
 }
 
 function Card({ children, className }: Props) {
@@ -115,7 +115,7 @@ function App() {
                     key={id}
                     id={id} 
                     label={label}
-                    error={errorMsg && error}/>
+                    error={error && errorMsg}/>
                 ))
               }
 
