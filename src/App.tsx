@@ -15,6 +15,7 @@ type Props = {
 type Text = {
   id: string;
   label: string;
+  error: any;
 }
 
 function Card({ children, className }: Props) {
@@ -38,7 +39,7 @@ function Button({ children, className }: Props) {
   );
 }
 
-function TextField({ id, label }: Text) {
+function TextField({ id, label, error }: Text) {
   const [value, setValue] = useState('');
   return (
     <div className="relative flex items-center">
@@ -56,15 +57,38 @@ function TextField({ id, label }: Text) {
         type="text" 
         name={id} 
         id={id} 
-        className="border border-gray focus:border-purple
-        w-full p-3 rounded"
+        className={clsx
+          ("border  w-full p-3 rounded",
+          error ? "border-primary" : "border-gray focus:border-purple" )}
         onChange={(event) => setValue(event.target.value)}/>
     </div>
   )
 }
 
+
+
 function App() {
+  const [formstate, setFormState] = useState([
+    { id: "first-name", error:false, label:"First Name", errorMsg: "First Name cannot be empty"  },
+    { id: "last-name", error:false, label:"Last Name", errorMsg: "Last Name cannot be empty" },
+    { id: "email", error:false, label:"Email", errorMsg: "Email cannot be empty" },
+    { id: "password", error:false, label:"Password", errorMsg: "Password cannot be empty" },
+  ])
   const [count, setCount] = useState(0)
+
+  function onSubmit(event:any) {
+    event.preventDefault();
+    
+    const form = new FormData(event.target);
+    const data = Object.fromEntries(form.entries());
+    setFormState((formstate) => 
+      formstate.map((state: any) => ({
+        ...state,
+        error: Boolean(data[state.id]),
+      }))
+    )
+  }
+  console.log(formstate)
 
   return (
     <div className="App container-xl p-6 md:w-full">
@@ -84,11 +108,17 @@ function App() {
             then $20/mo. thereafter</p>
           </Card>
           <Card className="bg-white text-black">
-            <form className="space-y-4">
-              <TextField id="first-name" label="First Name"/>
-              <TextField id="last-name" label="Last Name"/>
-              <TextField id="email" label="Email"/>
-              <TextField id="password" label="Password"/>
+            <form className="space-y-4" onSubmit={onSubmit}>
+              {
+                formstate.map(({id, label, errorMsg, error}) => (
+                  <TextField 
+                    key={id}
+                    id={id} 
+                    label={label}
+                    error={errorMsg && error}/>
+                ))
+              }
+
               <Button className="text-white shadow-green">CLAIM YOUR FREE TRIAL</Button>
               <div>
                 <p className="text-gray text-xs px-4">
