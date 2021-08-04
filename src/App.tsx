@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './App.css'
 import './css/app.css'
+import { ReactComponent as ErrorIcon } from './assets/images/icon-error.svg'
 
 
 function clsx(...str: string[] ) {
@@ -15,7 +16,7 @@ type Props = {
 type Text = {
   id: string;
   label: string;
-  error: string | boolean;
+  error: any;
 }
 
 function Card({ children, className }: Props) {
@@ -42,25 +43,41 @@ function Button({ children, className }: Props) {
 function TextField({ id, label, error }: Text) {
   const [value, setValue] = useState('');
   return (
-    <div className="relative flex items-center">
+    <div>
+      <div className={clsx("relative flex items-center",
+                      error && "text-primary")}>
 
-      {
-        value === '' && (
-          <label 
-            htmlFor={id} 
-            className={clsx("absolute px-3", value !== "" ? "opacity-0":"")}>
-            { label }
-          </label>
-        )}
+        {
+          value === '' && (
+            <label 
+              htmlFor={id} 
+              className={clsx(
+                "absolute px-3", 
+                value !== "" ? "opacity-0":"",
+                )}>
+              { label }
+            </label>
+          )}
 
-      <input
-        type="text" 
-        name={id} 
-        id={id} 
-        className={clsx
-          ("border  w-full p-3 rounded",
-          error ? "border-primary" : "border-gray focus:border-purple" )}
-        onChange={(event) => setValue(event.target.value)}/>
+        <input
+          type="text" 
+          name={id} 
+          id={id} 
+          className={clsx
+            ("border  w-full p-3 rounded",
+            error ? "border-primary" : "border-gray focus:border-purple" 
+          )}
+          onChange={(event) => setValue(event.target.value)}/>
+          {error && (
+            <ErrorIcon className="h-full absolute right-0 py-3 w-6 mr-3"/>
+          )}
+      </div>
+
+      {error && (
+        <div className="flex justify-end">
+          <span className="text-primary text-xs">{error}</span>
+        </div>
+      )}
     </div>
   )
 }
@@ -84,7 +101,7 @@ function App() {
     setFormState((formstate) => 
       formstate.map((state: any) => ({
         ...state,
-        error: Boolean(data[state.id]),
+        error: !Boolean(data[state.id]),
       }))
     )
   }
@@ -94,7 +111,7 @@ function App() {
     <div className="App container-xl p-6 md:w-full">
       <div className="flex md:flex-row flex-col 
       items-center h-screen justify-center 
-      text-white my-10 md:my-0">
+      text-white my-10 md:my-0 max-w-7xl mx-auto">
         <div className="md:flex-1 w-full md:pb-0 pb-10">
           <h1 className="text-3xl font-bold "
           >Learn to code by<br /> watching others</h1>
@@ -102,7 +119,7 @@ function App() {
             Watching scripted tutorials is great, 
             but understanding how developers think is invaluable. </p>
         </div>
-        <section className="grid gap-6">
+        <section className="grid gap-6 md:flex-1 w-full">
           <Card className="bg-purple">
             <p className="px-4"><b>Try it free 7 days </b> 
             then $20/mo. thereafter</p>
